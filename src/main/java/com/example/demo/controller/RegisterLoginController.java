@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.AppUser;
 import com.example.demo.repository.AppUserRepository;
+import com.example.demo.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,19 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegisterLoginController {
 
-    private final AppUserRepository appUserRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AppUserService appUserService;
 
 
     @PostMapping("/register")
     public AppUser register(@RequestBody AppUser appUser) {
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-        return appUserRepository.save(appUser);
+        return appUserService.register(appUser);
     }
 
     @GetMapping("/login")
     public String login(@RequestBody AppUser appUser) {
-        var user = appUserRepository.findByUsername(appUser.getUsername());
-        return user == null ? "NOT FOUND" : "SUCCESS";
+        return appUserService.login(appUser);
     }
 }
