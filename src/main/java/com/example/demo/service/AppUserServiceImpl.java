@@ -15,6 +15,7 @@ public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public AppUser register(AppUser appUser) {
@@ -29,7 +30,7 @@ public class AppUserServiceImpl implements AppUserService {
                         (
                                 new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword())
                         );
-        return authentication.isAuthenticated() ? "NOT FOUND" : "TOKEN";
+        return authentication.isAuthenticated() ? jwtService.generateToken(appUser) : "NOT-FOUND";
     }
 
 }
